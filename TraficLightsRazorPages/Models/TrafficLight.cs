@@ -24,13 +24,20 @@ namespace TraficLightsRazorPages.Models
         {
             this.CurrentColor = color;
         }
+        private void setOrangeColor()
+        {
+
+        }
         public void ChangeColor()
         {
 
-            if (PreviousColor == Colors.red && CurrentColor == Colors.orange)
+            if ( CurrentColor == Colors.orange && PreviousColor == Colors.red)
             {
-                CurrentColor = Colors.orange;
-
+                CurrentColor = Colors.green;
+            }
+            else if (CurrentColor == Colors.orange && PreviousColor == Colors.green)
+            {
+                CurrentColor = Colors.red;
             }
 
             /*
