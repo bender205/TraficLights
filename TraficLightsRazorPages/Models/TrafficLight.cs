@@ -30,6 +30,7 @@ namespace TraficLightsRazorPages.Models
             if (PreviousColor == Colors.red && CurrentColor == Colors.orange)
             {
                 CurrentColor = Colors.orange;
+
             }
 
             /*
