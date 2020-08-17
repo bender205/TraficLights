@@ -53,10 +53,10 @@
     height: 320px;
     border-radius: 30px;
 }
-
+   
 #colorButton {
     /* //remove default style */
-    appearance: none;
+   /* appearance: none;*/
     /* //make the traffic lights appear */
     position: relative;
     

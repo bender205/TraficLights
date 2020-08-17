@@ -1,65 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using static TraficLightsRazorPages.Models.IColorChangadable;
 
 namespace TraficLightsRazorPages.Models
 {
-    public class TrafficLight
+    public class TrafficLight : IColorChangadable
     {
+        private static TrafficLight _traficLight;
         public TrafficLight() { }
-        public TrafficLight(Colors color)
+        
+
+        public static TrafficLight GetTrafficLight()
         {
-            this.CurrentColor = color;
+            if(_traficLight is null)
+            {
+                _traficLight = new TrafficLight();
+            }
+            return _traficLight;
+
+            
         }
-        public enum Colors
-        {
-            red,
-            orange,
-            green
-        }
+
         public Colors CurrentColor { get; set; } = Colors.red;
-        public Colors PreviousColor { get; set; } = Colors.red;
-        public void SetColor(Colors color)
+     
+        public void NextColor()
         {
-            this.CurrentColor = color;
-        }
-        private void setOrangeColor()
-        {
-
-        }
-        public void ChangeColor()
-        {
-
-            if ( CurrentColor == Colors.orange && PreviousColor == Colors.red)
+            if (this.CurrentColor == Colors.red)
             {
-                CurrentColor = Colors.green;
+                this.CurrentColor = Colors.green;
             }
-            else if (CurrentColor == Colors.orange && PreviousColor == Colors.green)
+            else if (CurrentColor == Colors.green)
             {
-                CurrentColor = Colors.red;
+                this.CurrentColor = Colors.red;
             }
-
-            /*
-            switch (CurrentColor)
-            {
-                case Colors.red:
-                    this.CurrentColor = Colors.orange;
-                    break;
-
-                case Colors.orange:
-                    this.CurrentColor = Colors.green;
-                    break;
-
-                case Colors.green:
-                    this.CurrentColor = Colors.red;
-                    break;
-               *//* default:
-                    this.CurrentColor = Colors.red;
-                    break;*//*
-
-            }*/
-
 
         }
 

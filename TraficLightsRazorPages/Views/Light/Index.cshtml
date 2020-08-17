@@ -1,55 +1,78 @@
 ﻿@*
-    @{
-        ViewData["Title"] = "Index";
-    }
+    <link rel="stylesheet" href="~/css/style.css">
 
-    <h1>@ViewData["Title"]</h1>
-
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="~/css/style.css">
+    <script src="~/js/scripts.js"></script>
+    <div id="traffic-light">
+        <input type="radio" name="traffic-light-color" class="bulb" id="red" value="color1" />
+        <input type="radio" name="traffic-light-color" class="bulb" id="orange" value="color2" />
+        <input type="radio" name="traffic-light-color" class="bulb" id="green" value="color3" />
 
 
-    </head>
-    <body>
+    </div>
 
-        <div id="controlPanel">
-            <h1 class="stopButton" onclick="illuminateRed()" id="button">Stop</h1>
-            <h1 class="slowButton" id="button" onclick="illuminateYellow()">Slow</h1>
-            <h1 class="goButton" id="button" onclick="illuminateGreen()">Go</h1>
-        </div>
+    <div class="buttons">
 
-        <div class="container">
-            <div class="circle" id="red"></div>
-            <div class="circle" id="yellow"></div>
-            <div class="circle" id="green"></div>
-        </div>
+        <input type="button" id="colorButton" value="Red" onclick="changeColor('red')">
+
+        <input type="button" id="colorButton" value="Yellow" onclick="changeColor('orange')">
+
+        <input type="button" id="colorButton" value="Green" onclick="changeColor('green')">
 
 
-        <script src="~/js/scripts.js"></script>
-    </body>
-    </html>
-*@
+    </div>
+
+    <form method="post">
+    <input type="submit"    asp-page-handler="NextColor" value="Next" />
+    </form>*@
+
 <link rel="stylesheet" href="~/css/style.css">
 
 <script src="~/js/scripts.js"></script>
+
+<script type="blazor-boot">
+</script>
+@if (ViewBag.Color == "red")
+{
+    <script>
+        window.onload = function () { // same as window.addEventListener('load', (event) => {
+            changeColor('yellow');
+            changeColor('red');
+        };
+    </script>
+}
+else if (ViewBag.Color == "yellow")
+{
+    <script>
+        window.onload = function () { // same as window.addEventListener('load', (event) => {
+            changeColor('yellow');
+        };
+    </script>
+}
+else if (ViewBag.Color == "green")
+{
+    <script>
+        window.onload = function () { // same as window.addEventListener('load', (event) => {
+            changeColor('yellow');
+            changeColor('green');
+        };
+
+    </script>
+}
+
+
+
+
+
+
 <div id="traffic-light">
     <input type="radio" name="traffic-light-color" class="bulb" id="red" value="color1" />
-    <input type="radio" name="traffic-light-color" class="bulb" id="orange" value="color2" />
+    <input type="radio" name="traffic-light-color" class="bulb" id="yellow" value="color2" />
     <input type="radio" name="traffic-light-color" class="bulb" id="green" value="color3" />
 
 
 </div>
 
-<div class="buttons">
 
-    <input type="button" id="colorButton" value="Change" onclick="changeColor('red')">
-
-    <input type="button" id="colorButton" value="Change" onclick="changeColor('orange')">
-
-    <input type="button" id="colorButton" value="Change" onclick="changeColor('green')">
-
-</div>
+<form method="post">
+    <input type="submit" asp-page-handler="NextColor" value="Next" />
+</form>
