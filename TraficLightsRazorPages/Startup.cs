@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TraficLightsRazorPages.Hubs;
 using TraficLightsRazorPages.Models;
 
 namespace TraficLightsRazorPages
@@ -24,6 +25,7 @@ namespace TraficLightsRazorPages
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
             services.AddControllersWithViews();
             services.AddSingleton<IColorChangadable, TrafficLight>();
         }
@@ -46,13 +48,17 @@ namespace TraficLightsRazorPages
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapHub<TraficLightsHub>("/lighthub");
+                });
             });
         }
     }

@@ -20,7 +20,6 @@ namespace TraficLightsRazorPages.Models
                 _traficLight = new TrafficLight();
             }
             return _traficLight;
-
             
         }
 

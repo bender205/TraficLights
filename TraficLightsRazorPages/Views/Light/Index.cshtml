@@ -1,41 +1,7 @@
-﻿@*
-    <link rel="stylesheet" href="~/css/style.css">
-
-    <script src="~/js/scripts.js"></script>
-    <div id="traffic-light">
-        <input type="radio" name="traffic-light-color" class="bulb" id="red" value="color1" />
-        <input type="radio" name="traffic-light-color" class="bulb" id="orange" value="color2" />
-        <input type="radio" name="traffic-light-color" class="bulb" id="green" value="color3" />
-
-
-    </div>
-
-    <div class="buttons">
-
-        <input type="button" id="colorButton" value="Red" onclick="changeColor('red')">
-
-        <input type="button" id="colorButton" value="Yellow" onclick="changeColor('orange')">
-
-        <input type="button" id="colorButton" value="Green" onclick="changeColor('green')">
-
-
-    </div>
-
-    <form method="post">
-    <input type="submit"    asp-page-handler="NextColor" value="Next" />
-    </form>*@
-
-<link rel="stylesheet" href="~/css/style.css">
-
-<script src="~/js/scripts.js"></script>
-
-<script type="blazor-boot">
-</script>
-@if (ViewBag.Color == "red")
+﻿@*@if (ViewBag.Color == "red")
 {
     <script>
         window.onload = function () { // same as window.addEventListener('load', (event) => {
-            changeColor('yellow');
             changeColor('red');
         };
     </script>
@@ -52,15 +18,128 @@ else if (ViewBag.Color == "green")
 {
     <script>
         window.onload = function () { // same as window.addEventListener('load', (event) => {
-            changeColor('yellow');
             changeColor('green');
         };
 
     </script>
 }
+*@
+
+
+<link rel="stylesheet" href="~/css/style.css">
+@*
+<script src="~/js/scripts.js"></script>*@
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    @*const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/lighthub")
+        .build();
+
+
+    hubConnection.on('SendColor', function (color) {
+        changeColor(color);
+    });
+
+        document.getElementById("sendButton").addEventListener("click", function (event) {
+
+            connection.invoke("SendColor", color).catch(function (err) {
+                return console.error(err.toString());
+            });
+            event.preventDefault();
+        });
+
+    hubConnection.start();*@
+
+
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/lighthub").build();
+
+
+    connection.on("ReceiveColor", function (color) {
+        changeColor(color);
+    });
 
 
 
+    connection.start().then(function () {
+
+        document.getElementById("sendButton").addEventListener("click", function (event) {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/Light/NextColor', true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                };
+            };
+
+            xhr.send();
+
+            //connection.invoke("SendColor").catch(function (err) {
+            //    return console.error(err.toString());
+            //});
+            event.preventDefault();
+        });
+
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+
+    var bulbs = document.getElementsByClassName('bulb');
+
+
+
+
+    function changeColor(color) {
+        disableAllBulbs();
+
+        if (color == 'red') {
+            setYellowColor();
+
+            setTimeout(function () {
+                disableAllBulbs();
+            }, 2000);
+
+            var red = document.getElementById("red");
+            setTimeout(function () {
+                red.style.backgroundColor = color;
+            }, 2000);
+
+        }
+
+        else if (color == 'green') {
+            setYellowColor();
+
+            setTimeout(function () {
+                disableAllBulbs();
+            }, 2000);
+            var green = document.getElementById("green");
+            setTimeout(function () {
+                green.style.backgroundColor = color;
+            }, 2000);
+
+
+            
+        }
+    }
+
+
+    function disableAllBulbs() {
+        for (var i = 0; i < bulbs.length; i++) {
+            bulbs[i].style.backgroundColor = "grey";
+        }
+
+    }
+
+    function setYellowColor() {
+        var yellow = document.getElementById("yellow");
+        yellow.style.backgroundColor = "yellow";
+
+    }
+</script>
 
 
 
@@ -72,7 +151,12 @@ else if (ViewBag.Color == "green")
 
 </div>
 
+@*
+    <form method="post">
+        <input type="submit" asp-page-handler="NextColor" value="Next Controller" />
+    </form>*@
 
 <form method="post">
-    <input type="submit" asp-page-handler="NextColor" value="Next" />
+    <input type="submit" @*asp-page-handler="NextColor"*@ id="sendButton" value="Next" />
 </form>
+
