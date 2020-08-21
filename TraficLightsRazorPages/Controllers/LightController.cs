@@ -1,63 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using TraficLightsRazorPages.Hubs;
-using TraficLightsRazorPages.Models;
+using TraficLightsRazorPages.Core.Hubs;
+using TraficLightsRazorPages.Core.Models;
+using TraficLightsRazorPages.Core.TrafficLights.Queries;
 
 namespace TraficLightsRazorPages.Controllers
 {
     [Route("Light")]
     public class LightController : Controller
     {
-        TrafficLight traficLight = TrafficLight.GetTrafficLight();
-        IHubContext<TraficLightsHub> _hubContext;
-        public LightController(IHubContext<TraficLightsHub> hubContext)
+        private readonly TrafficLight _traficLight;
+        private readonly IMediator _mediator;
+
+        private readonly IHubContext<TraficLightsHub> _hubContext;
+     /*   private readonly TraficLightsContext _lightsContext;*/
+        public LightController(IHubContext<TraficLightsHub> hubContext, /*TraficLightsContext dbContext,*/
+            TrafficLight trafficLight, IMediator mediator)
         {
+            _traficLight = trafficLight;
+            _mediator = mediator;
             this._hubContext = hubContext;
+            
+            /*
+            this._lightsContext = dbContext;*/
         }
         public IActionResult Index()
         {
-            ViewBag.Color = traficLight.CurrentColor.ToString();
+            ViewBag.Color = _traficLight.CurrentColor.ToString();
             return View(ViewBag);
         }
-        /*
-         [HttpPost]
-        public IActionResult NextColor()
-        {
-            traficLight.NextColor();
-            ViewBag.Color = traficLight.CurrentColor.ToString();
-            return View("Index", ViewBag);
 
-        }*/
-        /*[HttpPost]
-        [Route("Light/NextColor")]
-        public IActionResult NextColor()
-        {
-            traficLight.NextColor();
-            ViewBag.Color = traficLight.CurrentColor.ToString();
-            return View("Index", ViewBag);
-
-        }*/
-        /*
-                [HttpPost]
-                public async Task<IActionResult> NextColor()
-                {
-                    traficLight.NextColor();
-                    ViewBag.Color = traficLight.CurrentColor.ToString();
-                   await _hubContext.Clients.All.SendAsync(traficLight.CurrentColor.ToString());
-                    return View("Index", ViewBag);
-
-                }*/
         [HttpPost("nextcolor")]
-        public void  NextColor()
-        {
-            traficLight.NextColor();
-            ViewBag.Color = traficLight.CurrentColor.ToString();
-             _hubContext.Clients.All.SendAsync("ReceiveColor", traficLight.CurrentColor.ToString());
+        public async Task<IActionResult> NextColor()
+        {/*
+            _traficLight.NextColor();//calling notifacation */
+            _mediator.Send(new ChangeColorCommand());
 
+            ViewBag.Color = _traficLight.CurrentColor.ToString();
+            await _hubContext.Clients.All.SendAsync("ReceiveColor", _traficLight.CurrentColor.ToString());
+
+            return NoContent();
         }
     }
 }

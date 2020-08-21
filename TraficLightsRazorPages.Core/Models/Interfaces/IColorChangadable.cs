@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace TraficLightsRazorPages.Models
+namespace TraficLightsRazorPages.Core.Models.Interfaces
 {
     public interface IColorChangadable
     {
@@ -12,10 +11,8 @@ namespace TraficLightsRazorPages.Models
             red,
             yellow,
             green
-        }
-        public abstract void NextColor();
+        }/*
+        public abstract void NextColor();*/
         public abstract Colors CurrentColor { get; set; }
-
-
     }
 }

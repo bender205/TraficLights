@@ -1,54 +1,8 @@
-﻿@*@if (ViewBag.Color == "red")
-{
-    <script>
-        window.onload = function () { // same as window.addEventListener('load', (event) => {
-            changeColor('red');
-        };
-    </script>
-}
-else if (ViewBag.Color == "yellow")
-{
-    <script>
-        window.onload = function () { // same as window.addEventListener('load', (event) => {
-            changeColor('yellow');
-        };
-    </script>
-}
-else if (ViewBag.Color == "green")
-{
-    <script>
-        window.onload = function () { // same as window.addEventListener('load', (event) => {
-            changeColor('green');
-        };
-
-    </script>
-}
-*@
-
-
+﻿
 <link rel="stylesheet" href="~/css/style.css">
-@*
-<script src="~/js/scripts.js"></script>*@
+
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script>
-    @*const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/lighthub")
-        .build();
-
-
-    hubConnection.on('SendColor', function (color) {
-        changeColor(color);
-    });
-
-        document.getElementById("sendButton").addEventListener("click", function (event) {
-
-            connection.invoke("SendColor", color).catch(function (err) {
-                return console.error(err.toString());
-            });
-            event.preventDefault();
-        });
-
-    hubConnection.start();*@
 
 
     "use strict";
@@ -76,10 +30,6 @@ else if (ViewBag.Color == "green")
             };
 
             xhr.send();
-
-            //connection.invoke("SendColor").catch(function (err) {
-            //    return console.error(err.toString());
-            //});
             event.preventDefault();
         });
 
@@ -94,35 +44,41 @@ else if (ViewBag.Color == "green")
 
 
     function changeColor(color) {
-        disableAllBulbs();
+
 
         if (color == 'red') {
-            setYellowColor();
 
-            setTimeout(function () {
-                disableAllBulbs();
-            }, 2000);
+            //setTimeout(function () {
+            disableAllBulbs();
+            //}, 2000);
 
             var red = document.getElementById("red");
-            setTimeout(function () {
-                red.style.backgroundColor = color;
-            }, 2000);
+            //setTimeout(function () {
+            red.style.backgroundColor = color;
+            //}, 2000);
 
         }
+        else if (color == 'yellow') {
+            //setTimeout(function () {
+            disableAllBulbs();
+            //}, 2000);
+            var green = document.getElementById("yellow");
+            //setTimeout(function () {
+            green.style.backgroundColor = color;
+            //}, 2000);
 
+
+
+        }
         else if (color == 'green') {
-            setYellowColor();
-
-            setTimeout(function () {
-                disableAllBulbs();
-            }, 2000);
+            //setTimeout(function () {
+            disableAllBulbs();
+            //}, 2000);
             var green = document.getElementById("green");
-            setTimeout(function () {
-                green.style.backgroundColor = color;
-            }, 2000);
+            //setTimeout(function () {
+            green.style.backgroundColor = color;
+            //}, 2000);
 
-
-            
         }
     }
 
@@ -134,29 +90,18 @@ else if (ViewBag.Color == "green")
 
     }
 
-    function setYellowColor() {
-        var yellow = document.getElementById("yellow");
-        yellow.style.backgroundColor = "yellow";
 
-    }
+
+
 </script>
 
-
-
 <div id="traffic-light">
-    <input type="radio" name="traffic-light-color" class="bulb" id="red" value="color1" />
-    <input type="radio" name="traffic-light-color" class="bulb" id="yellow" value="color2" />
-    <input type="radio" name="traffic-light-color" class="bulb" id="green" value="color3" />
-
-
+    <input type="radio" name="traffic-light-color" class="bulb" id="red" value="color1" style="@(ViewBag.Color == "red" ? "background-color: red" : null)" />
+    <input type="radio" name="traffic-light-color" class="bulb" id="yellow" value="color2"  style="@(ViewBag.Color == "yellow" ? "background-color: yellow" : null)" />
+    <input type="radio" name="traffic-light-color" class="bulb" id="green" value="color3"  style="@(ViewBag.Color == "green" ? "background-color: green" : null)" />
 </div>
 
-@*
-    <form method="post">
-        <input type="submit" asp-page-handler="NextColor" value="Next Controller" />
-    </form>*@
-
 <form method="post">
-    <input type="submit" @*asp-page-handler="NextColor"*@ id="sendButton" value="Next" />
+    <input type="submit" id="sendButton" value="Next" />
 </form>
 

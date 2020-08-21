@@ -1,15 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
+using DataAccess.Context;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TraficLightsRazorPages.Hubs;
-using TraficLightsRazorPages.Models;
+using TraficLightsRazorPages.Core.Hubs;
+using TraficLightsRazorPages.Core.Models;
+using TraficLightsRazorPages.Core.Models.Interfaces;
+using TraficLightsRazorPages.Data;
 
 namespace TraficLightsRazorPages
 {
@@ -27,7 +28,16 @@ namespace TraficLightsRazorPages
         {
             services.AddSignalR();
             services.AddControllersWithViews();
+
+            services.AddDbContext<TraficLightsContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
             services.AddSingleton<IColorChangadable, TrafficLight>();
+            services.AddSingleton<TrafficLight>();
+
+            services.AddScoped<TrafficLightRepository>();
+            services.AddMediatR(Assembly.GetExecutingAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
